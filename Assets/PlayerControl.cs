@@ -8,7 +8,7 @@ public class PlayerControl : MonoBehaviour
     float turn;
     float sensitivity = 3f;
     float gravity = 0.02f;
-    float jumpPower = 3f;
+    float jumpPower = 1.5f;
     float jumpSpeed;
 
     // Start is called before the first frame update
@@ -47,7 +47,7 @@ public class PlayerControl : MonoBehaviour
             // land on the ground, instead of going through it
             Debug.Log(jumpSpeed);
             RaycastHit hitInfo;
-            bool groundNear = Physics.Raycast(transform.position, Vector3.down, out hitInfo, distance + 1f + jumpSpeed +gravity);
+            bool groundNear = Physics.Raycast(transform.position, Vector3.down, out hitInfo, distance + 0.4f + jumpSpeed +gravity);
             if(groundNear && jumpSpeed<0) {
                 //hitInfo.point.y tells us where we will stop falling at
                 transform.Translate(0f, (transform.position.y-distance) -hitInfo.point.y, 0f);

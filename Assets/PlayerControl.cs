@@ -30,10 +30,12 @@ public class PlayerControl : MonoBehaviour
         controller = gameObject.AddComponent<CharacterController>();
     }
 
-    private float mySign(bool value) {
+    private float Sign(bool value) {
         // Returns 1 if true, -1 if false. An easy way to change the direction of something based solely on a bool value
         if(value) return 1; else return -1;
     }
+
+    
 
     // Update is called once per frame
     void Update()
@@ -49,7 +51,7 @@ public class PlayerControl : MonoBehaviour
         //if(Input.GetKey(KeyCode.LeftControl)) crouchPercent += 0.05f; else crouchPercent -= 0.05f;
         //Debug.Log(Mathf.Sign(Input.GetKey(KeyCode.LeftControl)));
         //crouchPercent = Mathf.Clamp(crouchPercent, 0, 1);
-        crouchPercent = Mathf.Clamp(crouchPercent +mySign(Input.GetKey(KeyCode.LeftControl))*0.05f, 0, 1);
+        crouchPercent = Mathf.Clamp(crouchPercent +Sign(Input.GetKey(KeyCode.LeftControl))* Time.deltaTime * 3.75f, 0, 1);
         transform.localScale = Vector3.Lerp(Vector3.one, Vector3.one/2, crouchPercent);
         float speed = Mathf.Lerp(moveSpeed, moveSpeed/2, crouchPercent);
         /*

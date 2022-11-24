@@ -3,49 +3,52 @@ using UnityEngine;
 public class PlayerControl : MonoBehaviour
 {
     public float moveSpeed = 4f;
-    public float turn;
+    public float sprintSpeedOffset = 3f;
+    public float turn = 0f;
     public float sensitivity = 3f;
     public float gravity = 9.81f;
     public float jumpHeight = 4f;
     public float jumpTime = 4f;
     public bool groundedPlayer = false;
 
+    private float crouchPercent = 0f;
     private CharacterController controller;
     private Vector3 playerVelocity;
 
     void Start()
     {
-        turn = 0f;
         controller = gameObject.AddComponent<CharacterController>();
         controller.minMoveDistance = 0f;
     }
 
+    // Returns 1 if true, -1 if false. An easy way to change the direction of something based solely on a bool value
+    private float Sign(bool value) => value ? 1f : -1f;
     void Update()
     {
         // Enabling rotation of player through mouse
         turn += Input.GetAxis("Mouse X") * sensitivity;
-        transform.localRotation = Quaternion.Euler(0, turn, 0);
+        transform.localRotation = Quaternion.Euler(0f, turn, 0f);
 
         groundedPlayer = controller.isGrounded;
-        if (groundedPlayer && playerVelocity.y < 0)
+        if (groundedPlayer && playerVelocity.y < 0f)
             playerVelocity.y = 0f;
 
-        float speed = moveSpeed;
-        // Handling sneaking/sprinting
-        if (Input.GetKey(KeyCode.LeftControl))
-        {
-            transform.localScale = Vector3.Lerp(transform.localScale, new(1f, .7f, 1f), 4f * Time.deltaTime);
-            speed /= 2;
-        }
-        else
-        {
-            transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one, 4f * Time.deltaTime);
-            if (Input.GetKey(KeyCode.LeftShift))
-                speed *= 1.5f;
-        }
+        // Handling sneaking
+        crouchPercent = Mathf.Clamp(crouchPercent + Sign(Input.GetKey(KeyCode.LeftControl)) * Time.deltaTime * 3.75f, 0, 1);
+        transform.localScale = Vector3.Lerp(Vector3.one, new(1f, .7f, 1f), crouchPercent);
+        transform.localPosition -= new Vector3(0f, transform.localPosition.y, 0f);
+        float speed = Mathf.Lerp(moveSpeed, moveSpeed / 2, crouchPercent);
+
+
+        // Handling sprinting
+        if (Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.LeftControl))
+            speed += sprintSpeedOffset;
 
         Vector3 move = Input.GetAxis("Horizontal") * transform.right + Input.GetAxis("Vertical") * transform.forward;
 
+        // Constant increment of the fall speed
+        // Applying gravity
+        // Jumping & physics
         if (Input.GetButtonDown("Jump") && groundedPlayer)
             playerVelocity.y += Mathf.Sqrt(jumpHeight * 3f * gravity);
 
@@ -54,9 +57,7 @@ public class PlayerControl : MonoBehaviour
         else
             jumpTime = 0f;
 
-        // Constant increment of the fall speed
         const float fallIncrement = .05f;
-        // Applying gravity
         playerVelocity.y -= fallIncrement * gravity * (jumpTime == 0f ? Time.deltaTime : jumpTime);
         controller.Move(speed * Time.deltaTime * move + playerVelocity * Time.deltaTime);
     }

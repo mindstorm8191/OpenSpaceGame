@@ -38,6 +38,15 @@ Along the way, the alien alliance explores the ship faster than the humans can, 
 
 Now, you & your team are stuck on the ship, while the new alien reclaims control of it, killing both humans and allies as it goes. Your team is the only ones that are strong enough to face them...
 
+### Characters
+
+The player will work on a multi-man team (member count not yet decided).
+
+-   Bruce. He is a heavy weapons expert, and very strong. His suite is modified to maximize his strength, but is slightly slower than the other members of his team. He has a fury about him, and is ruthless in defeating the enemy. He enjoys killing with more might than necessary. At one point in the game, he brings down an entire structure with a single punch to a critical support point.
+-   Ghost. He is a long range fighter, using sniper rifles to kill targets from large distances. He is sly and very patient, waiting for the right time to elimiate targets. He likes to generate fear in his enemies, utilizing key deaths to frighten enemies into panic.
+-   Jack. He is a close quarters fighter, excelling in hand to hand combat even against multiple enemies of the same strength. He is adept at using knife, sword and throwing axes along with his guns.
+-
+
 ### Other decisions
 
 -   Offer non-vocal communication methods. Players can point at something to tell your team to do something with it. Point at an enemy & tell your team to attack, ignore them, or stay out of their view. This system should be robust enough to give specific orders to teammates (unlike what they had in Halo 5)

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028355, g: 0.22571374, b: 0.30692255, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.3069224, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -620,6 +620,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c21a086e315a8b74fac35ba11bcf425f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveSpeed: 4
+  sprintSpeedOffset: 3
+  turn: 0
+  sensitivity: 3
+  gravity: 9.81
+  jumpHeight: 4
+  jumpTime: 4
   groundedPlayer: 0
 --- !u!136 &1204876703
 CapsuleCollider:

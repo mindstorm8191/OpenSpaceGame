@@ -1,12 +1,12 @@
 using UnityEngine;
+using System.Collections;
 
 public class Shooting : MonoBehaviour
 {
     private bool hasFired = false;
     public AudioClip pistolShot, pistolReload;
     public Camera cam;
-    // Start is called before the first frame update
-
+    
     // Update is called once per frame
     void Update()
     {
@@ -20,9 +20,10 @@ public class Shooting : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             {
                 hasFired = true;
-                AudioSource audio = FindObjectOfType<AudioSource>();
-                audio.clip = pistolShot;
-                audio.Play();
+                
+                // Start the sound effects. The reload sound will play right after the shot sound. We will
+                // use a coRoutine to wait until the first sound finishes before starting the second
+                StartCoroutine(gunSound());
 
                 // Get a point in front of the camera, where the bullet spawns from
                 Vector3 firePoint = cam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 1f));
@@ -34,10 +35,17 @@ public class Shooting : MonoBehaviour
                         target.TakeDamage(1f);
                 }
 
-                while (audio.isPlaying) { }
-                audio.clip = pistolReload;
-                audio.Play();
             }
         }
     }
+
+    public IEnumerator gunSound() {
+        AudioSource audio = FindObjectOfType<AudioSource>();
+        audio.clip = pistolShot;
+        audio.Play();
+        yield return new WaitForSeconds(audio.clip.length);
+        audio.clip = pistolReload;
+        audio.Play();
+    }
+    
 }

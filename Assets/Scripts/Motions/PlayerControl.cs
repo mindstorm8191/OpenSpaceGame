@@ -7,9 +7,13 @@ public class PlayerControl : MonoBehaviour
     public float turn = 0f;
     public float sensitivity = 3f;
     public float gravity = 9.81f;
-    public float jumpHeight = 4f;
-    public float jumpTime = 1f;
+    public float jumpHeight = 2f;
+    public float jumpTime = 4f;
     public bool groundedPlayer = false;
+
+    public bool jetpackEquipped = true; // Allows jetpack-assisted jumps
+    public float jetpackMaxFuel = 2.0f; // time it takes to recharge (not use) jetpack
+    public float jetpackFuel;
 
     private float crouchPercent = 0f;
     private CharacterController controller;
@@ -19,6 +23,8 @@ public class PlayerControl : MonoBehaviour
     {
         controller = gameObject.AddComponent<CharacterController>();
         controller.minMoveDistance = 0f;
+
+        jetpackFuel = jetpackMaxFuel;
     }
 
     // Returns 1 if true, -1 if false. An easy way to change the direction of something based solely on a bool value
@@ -49,16 +55,30 @@ public class PlayerControl : MonoBehaviour
         // Constant increment of the fall speed
         // Applying gravity
         // Jumping & physics
-        if (Input.GetButtonDown("Jump") && groundedPlayer)
+        if (Input.GetButtonDown("Jump") && groundedPlayer) {
             playerVelocity.y += Mathf.Sqrt(jumpHeight * 3f * gravity);
+        }
+        if(Input.GetButton("Jump") && !groundedPlayer) {
+            if(jetpackFuel>0) {
+                playerVelocity.y += 17 * Time.deltaTime;
+                jetpackFuel -= Time.deltaTime * 2.5f;
+            }
+        }else{
+            // Recharge jetpack
+            jetpackFuel += Time.deltaTime;
+        }
+        // limit jetpack fuel to ranges
+        jetpackFuel = Mathf.Clamp(jetpackFuel, 0, jetpackMaxFuel);
+        Debug.Log(jetpackFuel);
 
         if (!groundedPlayer)
             jumpTime += Time.deltaTime / 30f;
         else
             jumpTime = 0f;
 
-        const float fallIncrement = .5f;
-        playerVelocity.y -= fallIncrement * gravity * Mathf.Pow(jumpTime == 0f ? Time.deltaTime : jumpTime, 2);
+        const float fallIncrement = 1f;
+        playerVelocity.y -= fallIncrement * gravity * Time.deltaTime;
+        //playerVelocity.y -= fallIncrement * gravity * Mathf.Pow(jumpTime == 0f ? Time.deltaTime : jumpTime, 2);
         controller.Move(speed * Time.deltaTime * move + playerVelocity * Time.deltaTime);
     }
 }

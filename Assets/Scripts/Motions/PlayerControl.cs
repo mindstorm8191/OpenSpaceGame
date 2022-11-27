@@ -8,7 +8,7 @@ public class PlayerControl : MonoBehaviour
     public float sensitivity = 3f;
     public float gravity = 9.81f;
     public float jumpHeight = 4f;
-    public float jumpTime = 4f;
+    public float jumpTime = 1f;
     public bool groundedPlayer = false;
 
     private float crouchPercent = 0f;
@@ -57,8 +57,8 @@ public class PlayerControl : MonoBehaviour
         else
             jumpTime = 0f;
 
-        const float fallIncrement = .05f;
-        playerVelocity.y -= fallIncrement * gravity * (jumpTime == 0f ? Time.deltaTime : jumpTime);
+        const float fallIncrement = .5f;
+        playerVelocity.y -= fallIncrement * gravity * Mathf.Pow(jumpTime == 0f ? Time.deltaTime : jumpTime, 2);
         controller.Move(speed * Time.deltaTime * move + playerVelocity * Time.deltaTime);
     }
 }

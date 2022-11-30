@@ -4,17 +4,18 @@ public class PlayerControl : MonoBehaviour
 {
     public float moveSpeed = 4f;
     public float sprintSpeedOffset = 3f;
-    public float turn = 0f;
     public float sensitivity = 3f;
     public float gravity = 9.81f;
-    public float jumpHeight = 2f;
-    public float jumpTime = 4f;
+    public float jumpHeight = .1f;
     public bool groundedPlayer = false;
 
     public bool jetpackEquipped = true; // Allows jetpack-assisted jumps
     public float jetpackMaxFuel = 2.0f; // time it takes to recharge (not use) jetpack
-    public float jetpackFuel;
 
+
+    private float jetpackFuel = 0f;
+    private float turn = 0f;
+    private float jumpTime = 0f;
     private float crouchPercent = 0f;
     private CharacterController controller;
     private Vector3 playerVelocity;
@@ -55,21 +56,23 @@ public class PlayerControl : MonoBehaviour
         // Constant increment of the fall speed
         // Applying gravity
         // Jumping & physics
-        if (Input.GetButtonDown("Jump") && groundedPlayer) {
+        if (Input.GetButtonDown("Jump") && groundedPlayer)
             playerVelocity.y += Mathf.Sqrt(jumpHeight * 3f * gravity);
-        }
-        if(Input.GetButton("Jump") && !groundedPlayer) {
-            if(jetpackFuel>0) {
+
+        if (Input.GetButton("Jump") && !groundedPlayer)
+        {
+            if (jetpackFuel > 0)
+            {
                 playerVelocity.y += 17 * Time.deltaTime;
                 jetpackFuel -= Time.deltaTime * 2.5f;
             }
-        }else{
+        }
+        else
             // Recharge jetpack
             jetpackFuel += Time.deltaTime;
-        }
+
         // limit jetpack fuel to ranges
         jetpackFuel = Mathf.Clamp(jetpackFuel, 0, jetpackMaxFuel);
-        Debug.Log(jetpackFuel);
 
         if (!groundedPlayer)
             jumpTime += Time.deltaTime / 30f;
@@ -77,8 +80,7 @@ public class PlayerControl : MonoBehaviour
             jumpTime = 0f;
 
         const float fallIncrement = 1f;
-        playerVelocity.y -= fallIncrement * gravity * Time.deltaTime;
-        //playerVelocity.y -= fallIncrement * gravity * Mathf.Pow(jumpTime == 0f ? Time.deltaTime : jumpTime, 2);
+        playerVelocity.y -= fallIncrement * gravity * Mathf.Pow(jumpTime == 0f ? Time.deltaTime : jumpTime, 2);
         controller.Move(speed * Time.deltaTime * move + playerVelocity * Time.deltaTime);
     }
 }
